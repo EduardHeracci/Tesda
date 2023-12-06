@@ -1,5 +1,5 @@
 import { PassportSerializer } from '@nestjs/passport';
-import { Trainer } from 'src/trainer/entities/trainer.entity';
+import { Trainer } from '@/trainer/entities/trainer.entity';
 
 export class TrainerSerializer extends PassportSerializer {
   serializeUser(
@@ -8,14 +8,14 @@ export class TrainerSerializer extends PassportSerializer {
   ) {
     done(null, {
       sub: trainer.id,
-      username: trainer.userName,
+      username: trainer.username,
       role: trainer.role,
     });
   }
 
   async deserializeUser(
-    payload: Record<string, any>,
-    done: (err: Error, trainer: Record<string, any>) => void,
+    payload: Trainer,
+    done: (err: Error, trainer: Trainer) => void,
   ) {
     done(null, payload);
   }

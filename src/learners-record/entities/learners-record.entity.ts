@@ -1,6 +1,6 @@
-import { LearnersInfo } from 'src/learners-info/entities/learners-info.entity';
-import { TrainingDuration } from 'src/training-duration/entities/training-duration.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { LearnersInfo } from '@/learners-info/entities/learners-info.entity';
+import { TrainingDuration } from '@/training-duration/entities/training-duration.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
 
 @Entity()
 export class LearnersRecord {
@@ -23,5 +23,5 @@ export class LearnersRecord {
     () => TrainingDuration,
     (trainingDuration) => trainingDuration.learnersRecord,
   )
-  trainingDuration: TrainingDuration;
+  trainingDuration: Relation<TrainingDuration>;
 }

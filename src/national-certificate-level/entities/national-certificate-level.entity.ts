@@ -1,4 +1,4 @@
-import { Qualification } from 'src/qualification/entities/qualification.entity';
+import { Qualification } from '@/qualification/entities/qualification.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()

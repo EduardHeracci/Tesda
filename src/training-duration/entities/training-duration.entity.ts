@@ -1,13 +1,14 @@
-import { LearnersRecord } from 'src/learners-record/entities/learners-record.entity';
-import { Qualification } from 'src/qualification/entities/qualification.entity';
-import { Scholarship } from 'src/scholarship/entities/scholarship.entity';
-import { Trainer } from 'src/trainer/entities/trainer.entity';
+import { LearnersRecord } from '@/learners-record/entities/learners-record.entity';
+import { Qualification } from '@/qualification/entities/qualification.entity';
+import { Scholarship } from '@/scholarship/entities/scholarship.entity';
+import { Trainer } from '@/trainer/entities/trainer.entity';
 import {
   Column,
   Entity,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  Relation,
 } from 'typeorm';
 
 @Entity()
@@ -22,7 +23,7 @@ export class TrainingDuration {
   dateEnd: string;
 
   @ManyToOne(() => Trainer, (trainer) => trainer.trainingDuration)
-  trainer: Trainer;
+  trainer: Relation<Trainer>;
 
   @ManyToOne(() => Scholarship, (scholarship) => scholarship.trainingDuration)
   scholarship: Scholarship;

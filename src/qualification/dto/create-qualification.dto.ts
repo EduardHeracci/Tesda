@@ -1,6 +1,6 @@
 import { IsOptional } from 'class-validator';
-import { LevelCompetency } from 'src/level-competency/entities/level-competency.entity';
-import { NationalCertificateLevel } from 'src/national-certificate-level/entities/national-certificate-level.entity';
+import { LevelCompetency } from '@/level-competency/entities/level-competency.entity';
+import { NationalCertificateLevel } from '@/national-certificate-level/entities/national-certificate-level.entity';
 
 export class CreateQualificationDto {
   @IsOptional()

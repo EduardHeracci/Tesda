@@ -1,5 +1,5 @@
-import { Qualification } from 'src/qualification/entities/qualification.entity';
-import { UnitCompetency } from 'src/unit-competency/entities/unit-competency.entity';
+import { Qualification } from '@/qualification/entities/qualification.entity';
+import { UnitCompetency } from '@/unit-competency/entities/unit-competency.entity';
 import {
   Column,
   Entity,

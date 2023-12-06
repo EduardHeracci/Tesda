@@ -1,4 +1,4 @@
-import { LearnersInfo } from 'src/learners-info/entities/learners-info.entity';
+import { LearnersInfo } from '@/learners-info/entities/learners-info.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()

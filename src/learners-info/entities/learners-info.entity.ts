@@ -1,5 +1,5 @@
-import { LearnersRecord } from 'src/learners-record/entities/learners-record.entity';
-import { Municipality } from 'src/municipality/entities/municipality.entity';
+import { LearnersRecord } from '@/learners-record/entities/learners-record.entity';
+import { Municipality } from '@/municipality/entities/municipality.entity';
 import {
   Column,
   Entity,

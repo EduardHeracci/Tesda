@@ -1,4 +1,4 @@
-import { UnitCompetency } from 'src/unit-competency/entities/unit-competency.entity';
+import { UnitCompetency } from '@/unit-competency/entities/unit-competency.entity';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 
 @Entity()

@@ -1,8 +1,8 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { HashingService } from '../resources/hashing.service';
-import { Trainer } from 'src/trainer/entities/trainer.entity';
+import { Trainer } from '@/trainer/entities/trainer.entity';
 import { randomUUID } from 'crypto';
-import jwtConfig from 'src/config/jwt.configuration';
+import jwtConfig from '@/config/jwt.configuration';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import {
@@ -10,7 +10,7 @@ import {
   RefreshTokenIdsStorage,
 } from '../resources/refresh-token-ids.storage';
 import { RefreshTokenDto } from '../resources/dto/refresh-tokens.dto';
-import { CreateTrainerDto } from 'src/trainer/dto/create-trainer.dto';
+import { CreateTrainerDto } from '@/trainer/dto/create-trainer.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -28,7 +28,7 @@ export class AuthenticationService {
 
   async signIn(signInDto: CreateTrainerDto) {
     const user = await this.trainerRepository.findOneBy({
-      userName: signInDto.userName,
+      username: signInDto.username,
     });
     if (!user) {
       throw new UnauthorizedException('User does not exists');
@@ -47,7 +47,7 @@ export class AuthenticationService {
     const refreshTokenId = randomUUID();
     const [accessToken, refreshToken] = await Promise.all([
       this.signToken(user.id, this.jwtConfiguration.accessTokenTtl, {
-        username: user.userName,
+        username: user.username,
         role: user.role,
       }),
       this.signToken(user.id, this.jwtConfiguration.refreshTokenTtl, {

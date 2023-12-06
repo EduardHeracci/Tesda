@@ -8,7 +8,7 @@ import { UpdateTrainerDto } from './dto/update-trainer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Trainer } from './entities/trainer.entity';
 import { Repository } from 'typeorm';
-import { HashingService } from 'src/security/resources/hashing.service';
+import { HashingService } from '@/security/resources/hashing.service';
 
 @Injectable()
 export class TrainerService {
@@ -51,15 +51,15 @@ export class TrainerService {
     }
   }
 
-  async findOneBy(userName: string): Promise<Trainer> {
-    try {
-      return await this.trainerRepository.findOneOrFail({
-        where: { userName },
-      });
-    } catch (error) {
-      throw new BadRequestException();
-    }
-  }
+  // async findOneBy(username: string): Promise<Trainer> {
+  //   try {
+  //     return await this.trainerRepository.findOneOrFail({
+  //       where: { username },
+  //     });
+  //   } catch (error) {
+  //     throw new BadRequestException();
+  //   }
+  // }
 
   async update(id: number, updateTrainerDto: UpdateTrainerDto) {
     try {

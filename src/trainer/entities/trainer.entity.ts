@@ -1,4 +1,4 @@
-import { TrainingDuration } from 'src/training-duration/entities/training-duration.entity';
+import { TrainingDuration } from '@/training-duration/entities/training-duration.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -13,13 +13,13 @@ export class Trainer {
   middleName: string;
 
   @Column()
-  lastName: string;
+  lastname: string;
 
   @Column()
   qualification: string;
 
   @Column()
-  userName: string;
+  username: string;
 
   @Column()
   password: string;

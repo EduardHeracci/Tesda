@@ -1,6 +1,6 @@
 import { IsOptional } from 'class-validator';
-import { LearnersInfo } from 'src/learners-info/entities/learners-info.entity';
-import { TrainingDuration } from 'src/training-duration/entities/training-duration.entity';
+import { LearnersInfo } from '@/learners-info/entities/learners-info.entity';
+import { TrainingDuration } from '@/training-duration/entities/training-duration.entity';
 
 export class CreateLearnersRecordDto {
   @IsOptional()

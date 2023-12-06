@@ -1,5 +1,5 @@
+import { Municipality } from '@/municipality/entities/municipality.entity';
 import { IsOptional } from 'class-validator';
-import { Municipality } from 'src/municipality/entities/municipality.entity';
 
 export class CreateLearnersInfoDto {
   @IsOptional()

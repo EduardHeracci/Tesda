@@ -3,8 +3,8 @@ import { TrainerService } from './trainer.service';
 import { TrainerController } from './trainer.controller';
 import { Trainer } from './entities/trainer.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { HashingService } from 'src/security/resources/hashing.service';
-import { BcryptService } from 'src/security/resources/bcrypt.service';
+import { HashingService } from '@/security/resources/hashing.service';
+import { BcryptService } from '@/security/resources/bcrypt.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Trainer])],

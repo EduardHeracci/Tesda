@@ -14,7 +14,7 @@ export class CreateTrainerDto {
   qualification: string;
 
   @IsOptional()
-  userName: string;
+  username: string;
 
   @IsOptional()
   password: string;

@@ -1,6 +1,6 @@
-import { LevelCompetency } from 'src/level-competency/entities/level-competency.entity';
-import { NationalCertificateLevel } from 'src/national-certificate-level/entities/national-certificate-level.entity';
-import { TrainingDuration } from 'src/training-duration/entities/training-duration.entity';
+import { LevelCompetency } from '@/level-competency/entities/level-competency.entity';
+import { NationalCertificateLevel } from '@/national-certificate-level/entities/national-certificate-level.entity';
+import { TrainingDuration } from '@/training-duration/entities/training-duration.entity';
 import {
   Column,
   Entity,

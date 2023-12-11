@@ -24,9 +24,35 @@ export class LearnersInfoService {
     }
   }
 
-  async findAll(): Promise<LearnersInfo[]> {
+  async findAll(ids?: number[], isActive?: string): Promise<LearnersInfo[]> {
+    const query = this.learnersInfoRepository
+      .createQueryBuilder('learnersInfo')
+      .leftJoin('learnersInfo.municipality', 'municipality')
+      .select([
+        'learnersInfo.id AS id',
+        'learnersInfo.firstName AS first_name',
+        'learnersInfo.middleName AS middle_name',
+        'learnersInfo.lastName AS last_name',
+        'learnersInfo.suffix AS suffix',
+        'learnersInfo.gender AS gender',
+        'learnersInfo.phoneNumber AS phone_number',
+        'learnersInfo.address AS address',
+        'learnersInfo.isActive AS isActive',
+        'municipality',
+        `DATE_PART('year', AGE(NOW(), learnersInfo.birthDate)) AS age`,
+        `TO_CHAR(learnersInfo.birthDate, 'YYYY-MM-DD') AS birth_date`,
+      ]);
+
+    if (ids && ids.length > 0) {
+      query.where('learnersInfo.id IN (:...ids)', { ids });
+    }
+
+    if (isActive != undefined) {
+      query.andWhere('learnersInfo.isActive = :isActive', { isActive });
+    }
+
     try {
-      return await this.learnersInfoRepository.find();
+      return await query.getRawMany();
     } catch (error) {
       throw new NotFoundException();
     }

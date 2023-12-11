@@ -10,11 +10,13 @@ import {
 import { TrainerService } from './trainer.service';
 import { CreateTrainerDto } from './dto/create-trainer.dto';
 import { UpdateTrainerDto } from './dto/update-trainer.dto';
+import { Public } from '@/security/resources/decorators/public.decorator';
 
 @Controller('trainer')
 export class TrainerController {
   constructor(private readonly trainerService: TrainerService) {}
 
+  @Public()
   @Post()
   async create(@Body() createTrainerDto: CreateTrainerDto) {
     return await this.trainerService.create(createTrainerDto);

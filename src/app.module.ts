@@ -16,6 +16,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseConfig } from './config/database.configuration';
 import { AuthenticationModule } from './security/authentication/authentication.module';
+import { EventsModule } from './security/resources/events/event.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { AuthenticationModule } from './security/authentication/authentication.m
     ScholarshipModule,
     MunicipalityModule,
     AuthenticationModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

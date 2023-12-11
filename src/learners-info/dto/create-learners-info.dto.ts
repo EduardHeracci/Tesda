@@ -12,7 +12,10 @@ export class CreateLearnersInfoDto {
   lastName: string;
 
   @IsOptional()
-  birthDate: string;
+  suffix: string;
+
+  @IsOptional()
+  birthDate: Date;
 
   @IsOptional()
   gender: string;
@@ -25,4 +28,7 @@ export class CreateLearnersInfoDto {
 
   @IsOptional()
   municipality: Municipality;
+
+  @IsOptional()
+  isActive: boolean;
 }

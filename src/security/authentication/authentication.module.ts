@@ -21,10 +21,10 @@ import { AuthenticationGuard } from './authentication.guard';
   ],
   controllers: [AuthenticationController],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: AuthenticationGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AuthenticationGuard,
+    // },
     {
       provide: HashingService,
       useClass: BcryptService,

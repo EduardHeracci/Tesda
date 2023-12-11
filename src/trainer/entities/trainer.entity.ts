@@ -13,7 +13,16 @@ export class Trainer {
   middleName: string;
 
   @Column()
-  lastname: string;
+  lastName: string;
+
+  @Column({ nullable: true })
+  suffix: string;
+
+  @Column()
+  gender: string;
+
+  @Column()
+  birthDate: string;
 
   @Column()
   qualification: string;
@@ -26,6 +35,9 @@ export class Trainer {
 
   @Column()
   role: string;
+
+  @Column({ default: true })
+  isActive: boolean;
 
   @OneToMany(
     () => TrainingDuration,

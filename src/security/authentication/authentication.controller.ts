@@ -31,11 +31,13 @@ export class AuthenticationController {
       secure: true,
       httpOnly: false,
       sameSite: true,
+      maxAge: 900000,
     });
     response.cookie('refreshToken', refreshToken, {
       secure: true,
       httpOnly: false,
       sameSite: true,
+      maxAge: 86400000,
     });
   }
 

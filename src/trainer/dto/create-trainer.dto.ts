@@ -11,6 +11,15 @@ export class CreateTrainerDto {
   lastName: string;
 
   @IsOptional()
+  suffix: string;
+
+  @IsOptional()
+  gender: string;
+
+  @IsOptional()
+  birthDate: string;
+
+  @IsOptional()
   qualification: string;
 
   @IsOptional()
@@ -21,4 +30,7 @@ export class CreateTrainerDto {
 
   @IsOptional()
   role: string;
+
+  @IsOptional()
+  isActive: boolean;
 }

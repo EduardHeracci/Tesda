@@ -2,6 +2,7 @@ import { LearnersRecord } from '@/learners-record/entities/learners-record.entit
 import { Municipality } from '@/municipality/entities/municipality.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -22,8 +23,11 @@ export class LearnersInfo {
   @Column()
   lastName: string;
 
-  @Column()
-  birthDate: string;
+  @Column({ nullable: true })
+  suffix: string;
+
+  @Column({ type: 'date' })
+  birthDate: Date;
 
   @Column()
   gender: string;
@@ -36,6 +40,9 @@ export class LearnersInfo {
 
   @ManyToOne(() => Municipality, (municipality) => municipality.learnersInfo)
   municipality: Municipality;
+
+  @Column({ default: true })
+  isActive: boolean;
 
   @OneToMany(
     () => LearnersRecord,

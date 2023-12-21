@@ -24,6 +24,41 @@ export class LearnersInfoService {
     }
   }
 
+  async createUsingExcel(data: any[]) {
+    try {
+      const learnersInfoArray = data.map((row) => {
+        const [
+          firstName,
+          middleName,
+          lastName,
+          suffix,
+          birthDate,
+          gender,
+          phoneNumber,
+          address,
+          municipality,
+        ] = row;
+
+        const entity = new LearnersInfo();
+        entity.firstName = firstName;
+        entity.middleName = middleName;
+        entity.lastName = lastName;
+        entity.suffix = suffix;
+        entity.birthDate = new Date(birthDate);
+        entity.gender = gender;
+        entity.phoneNumber = phoneNumber;
+        entity.address = address;
+        entity.municipality = municipality;
+
+        return entity;
+      });
+
+      return await this.learnersInfoRepository.save(learnersInfoArray);
+    } catch (error) {
+      throw new BadRequestException();
+    }
+  }
+
   async findAll(ids?: number[], isActive?: string): Promise<LearnersInfo[]> {
     const query = this.learnersInfoRepository
       .createQueryBuilder('learnersInfo')

@@ -7,11 +7,15 @@ import {
   Param,
   Delete,
   Query,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { LearnersInfoService } from './learners-info.service';
 import { CreateLearnersInfoDto } from './dto/create-learners-info.dto';
 import { UpdateLearnersInfoDto } from './dto/update-learners-info.dto';
 import { EventsGateWay } from '@/security/resources/events/event.gateway';
+import { FileInterceptor } from '@nestjs/platform-express';
+import xlsx from 'xlsx';
 
 @Controller('learners-info')
 export class LearnersInfoController {
@@ -25,6 +29,33 @@ export class LearnersInfoController {
     const createdLearnersInfo = await this.learnersInfoService.create(
       createLearnersInfoDto,
     );
+    this.eventsGateWay.server.emit('createdLearnersInfo', createdLearnersInfo);
+    return createdLearnersInfo;
+  }
+
+  // @Post('file')
+  // @UseInterceptors(FileInterceptor('file'))
+  // uploadFile(
+  //   @Body() createLearnersInfoDto: CreateLearnersInfoDto,
+  //   @UploadedFile() file: Express.Multer.File,
+  // ) {
+  //   return {
+  //     createLearnersInfoDto,
+  //     file: file.buffer.toString(),
+  //   };
+  // }
+
+  @Post('/upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async createUsingExcel(@UploadedFile() file: Express.Multer.File) {
+    console.log(file);
+    const workbook = xlsx.read(file.buffer, { type: 'buffer' });
+
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+    const data = xlsx.utils.sheet_to_json(worksheet, { header: 1, range: 1 });
+    const createdLearnersInfo =
+      await this.learnersInfoService.createUsingExcel(data);
     this.eventsGateWay.server.emit('createdLearnersInfo', createdLearnersInfo);
     return createdLearnersInfo;
   }

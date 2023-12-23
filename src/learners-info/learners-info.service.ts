@@ -79,12 +79,25 @@ export class LearnersInfoService {
       ]);
 
     if (ids && ids.length > 0) {
+      query.addSelect('COUNT(learnersInfo.id) OVER() AS count');
       query.where('learnersInfo.id IN (:...ids)', { ids });
     }
 
     if (isActive != undefined) {
       query.andWhere('learnersInfo.isActive = :isActive', { isActive });
     }
+
+    try {
+      return await query.getRawMany();
+    } catch (error) {
+      throw new NotFoundException();
+    }
+  }
+
+  async countAll(): Promise<LearnersInfo[]> {
+    const query = this.learnersInfoRepository
+      .createQueryBuilder('learnersInfo')
+      .select('COUNT(learnersInfo.id) AS total_learners');
 
     try {
       return await query.getRawMany();

@@ -69,6 +69,11 @@ export class LearnersInfoController {
     return await this.learnersInfoService.findAll(idArray, isActive);
   }
 
+  @Get('/count')
+  async countAll() {
+    return await this.learnersInfoService.countAll();
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.learnersInfoService.findOne(+id);

@@ -62,11 +62,11 @@ export class LearnersInfoController {
 
   @Get()
   async findAll(
-    @Query('id') id?: string,
     @Query('isActive') isActive?: string,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
   ) {
-    const idArray = id ? id.split(',').map((id) => +id) : undefined;
-    return await this.learnersInfoService.findAll(idArray, isActive);
+    return await this.learnersInfoService.findAll(isActive, limit, offset);
   }
 
   @Get('/count')

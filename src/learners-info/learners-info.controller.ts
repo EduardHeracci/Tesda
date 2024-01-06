@@ -60,13 +60,18 @@ export class LearnersInfoController {
     return createdLearnersInfo;
   }
 
+  // @Get()
+  // async findAll(
+  //   @Query('isActive') isActive?: string,
+  //   @Query('limit') limit?: number,
+  //   @Query('offset') offset?: number,
+  // ) {
+  //   return await this.learnersInfoService.findAll(isActive, limit, offset);
+  // }
+
   @Get()
-  async findAll(
-    @Query('isActive') isActive?: string,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
-  ) {
-    return await this.learnersInfoService.findAll(isActive, limit, offset);
+  async findAll(@Query('isActive') isActive?: string) {
+    return await this.learnersInfoService.findAll(isActive);
   }
 
   @Get('/count')

@@ -17,7 +17,7 @@ export class LearnersInfo {
   @Column()
   firstName: string;
 
-  @Column()
+  @Column({ nullable: true })
   middleName: string;
 
   @Column()

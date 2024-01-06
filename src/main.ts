@@ -26,6 +26,7 @@ async function bootstrap() {
       'Server',
       'User-Agent',
       'X-Requested-With',
+      //'X-Content-Type-Options',
     ],
     exposedHeaders: [],
     credentials: true,

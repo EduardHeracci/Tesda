@@ -59,10 +59,55 @@ export class LearnersInfoService {
     }
   }
 
+  // async findAll(
+  //   isActive?: string,
+  //   limit?: number,
+  //   offset?: number,
+  // ): Promise<LearnersInfo[]> {
+  //   const query = this.learnersInfoRepository
+  //     .createQueryBuilder('learnersInfo')
+  //     .leftJoin('learnersInfo.municipality', 'municipality')
+  //     .select([
+  //       'learnersInfo.id AS id',
+  //       'learnersInfo.firstName AS first_name',
+  //       'learnersInfo.middleName AS middle_name',
+  //       'learnersInfo.lastName AS last_name',
+  //       'learnersInfo.suffix AS suffix',
+  //       'learnersInfo.gender AS gender',
+  //       'learnersInfo.phoneNumber AS phone_number',
+  //       'learnersInfo.address AS address',
+  //       'learnersInfo.isActive AS isActive',
+  //       'municipality',
+  //       `DATE_PART('year', AGE(NOW(), learnersInfo.birthDate)) AS age`,
+  //       `TO_CHAR(learnersInfo.birthDate, 'YYYY-MM-DD') AS birth_date`,
+  //     ]);
+
+  //   if (isActive !== undefined) {
+  //     query.andWhere('learnersInfo.isActive = :isActive', { isActive });
+  //   }
+
+  //   if (limit !== undefined) {
+  //     query.limit(limit);
+  //   }
+
+  //   if (offset !== undefined) {
+  //     query.offset(offset);
+  //   }
+
+  //   try {
+  //     // const [data, total] = await Promise.all([
+  //     //   query.getRawMany(),
+  //     //   this.learnersInfoRepository.count(),
+  //     // ]);
+
+  //     return query.getRawMany();
+  //   } catch (error) {
+  //     throw new NotFoundException();
+  //   }
+  // }
+
   async findAll(
     isActive?: string,
-    limit?: number,
-    offset?: number,
   ): Promise<{ data: LearnersInfo[]; total: number }> {
     const query = this.learnersInfoRepository
       .createQueryBuilder('learnersInfo')
@@ -84,14 +129,6 @@ export class LearnersInfoService {
 
     if (isActive !== undefined) {
       query.andWhere('learnersInfo.isActive = :isActive', { isActive });
-    }
-
-    if (limit !== undefined) {
-      query.limit(limit);
-    }
-
-    if (offset !== undefined) {
-      query.offset(offset);
     }
 
     try {

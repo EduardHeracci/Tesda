@@ -10,16 +10,25 @@ import {
 import { LevelCompetencyService } from './level-competency.service';
 import { CreateLevelCompetencyDto } from './dto/create-level-competency.dto';
 import { UpdateLevelCompetencyDto } from './dto/update-level-competency.dto';
+import { EventsGateWay } from '@/security/resources/events/event.gateway';
 
 @Controller('level-competency')
 export class LevelCompetencyController {
   constructor(
     private readonly levelCompetencyService: LevelCompetencyService,
+    private readonly eventsGateWay: EventsGateWay,
   ) {}
 
   @Post()
   async create(@Body() createLevelCompetencyDto: CreateLevelCompetencyDto) {
-    return await this.levelCompetencyService.create(createLevelCompetencyDto);
+    const createdLevelCompetency = await this.levelCompetencyService.create(
+      createLevelCompetencyDto,
+    );
+    this.eventsGateWay.server.emit(
+      'createdLevelCompetency',
+      createdLevelCompetency,
+    );
+    return createdLevelCompetency;
   }
 
   @Get()
@@ -37,10 +46,15 @@ export class LevelCompetencyController {
     @Param('id') id: string,
     @Body() updateLevelCompetencyDto: UpdateLevelCompetencyDto,
   ) {
-    return await this.levelCompetencyService.update(
+    const updatedLevelCompetency = await this.levelCompetencyService.update(
       +id,
       updateLevelCompetencyDto,
     );
+    this.eventsGateWay.server.emit(
+      'updatedLevelCompetency',
+      updatedLevelCompetency,
+    );
+    return updatedLevelCompetency;
   }
 
   @Delete(':id')

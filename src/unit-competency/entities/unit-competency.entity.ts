@@ -8,6 +8,9 @@ export class UnitCompetency {
   id: string;
 
   @Column()
+  unitCompetencyCode: string;
+
+  @Column()
   name: string;
 
   @ManyToOne(

@@ -10,14 +10,25 @@ import {
 import { QualificationService } from './qualification.service';
 import { CreateQualificationDto } from './dto/create-qualification.dto';
 import { UpdateQualificationDto } from './dto/update-qualification.dto';
+import { EventsGateWay } from '@/security/resources/events/event.gateway';
 
 @Controller('qualification')
 export class QualificationController {
-  constructor(private readonly qualificationService: QualificationService) {}
+  constructor(
+    private readonly qualificationService: QualificationService,
+    private readonly eventsGateWay: EventsGateWay,
+  ) {}
 
   @Post()
   async create(@Body() createQualificationDto: CreateQualificationDto) {
-    return await this.qualificationService.create(createQualificationDto);
+    const createdQualification = await this.qualificationService.create(
+      createQualificationDto,
+    );
+    this.eventsGateWay.server.emit(
+      'createdQualification',
+      createdQualification,
+    );
+    return createdQualification;
   }
 
   @Get()
@@ -35,7 +46,15 @@ export class QualificationController {
     @Param('id') id: string,
     @Body() updateQualificationDto: UpdateQualificationDto,
   ) {
-    return await this.qualificationService.update(+id, updateQualificationDto);
+    const updatedQualification = await this.qualificationService.update(
+      +id,
+      updateQualificationDto,
+    );
+    this.eventsGateWay.server.emit(
+      'updatedQualification',
+      updatedQualification,
+    );
+    return updatedQualification;
   }
 
   @Delete(':id')

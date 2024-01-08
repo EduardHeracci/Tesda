@@ -10,16 +10,25 @@ import {
 import { TrainingDurationService } from './training-duration.service';
 import { CreateTrainingDurationDto } from './dto/create-training-duration.dto';
 import { UpdateTrainingDurationDto } from './dto/update-training-duration.dto';
+import { EventsGateWay } from '@/security/resources/events/event.gateway';
 
 @Controller('training-duration')
 export class TrainingDurationController {
   constructor(
     private readonly trainingDurationService: TrainingDurationService,
+    private readonly eventsGateWay: EventsGateWay,
   ) {}
 
   @Post()
   async create(@Body() createTrainingDurationDto: CreateTrainingDurationDto) {
-    return await this.trainingDurationService.create(createTrainingDurationDto);
+    const createdTrainingDuration = await this.trainingDurationService.create(
+      createTrainingDurationDto,
+    );
+    this.eventsGateWay.server.emit(
+      'createdTrainingDuration',
+      createdTrainingDuration,
+    );
+    return createdTrainingDuration;
   }
 
   @Get()
@@ -37,10 +46,15 @@ export class TrainingDurationController {
     @Param('id') id: string,
     @Body() updateTrainingDurationDto: UpdateTrainingDurationDto,
   ) {
-    return await this.trainingDurationService.update(
+    const updatedTrainingDuration = await this.trainingDurationService.update(
       +id,
       updateTrainingDurationDto,
     );
+    this.eventsGateWay.server.emit(
+      'updatedTrainingDuration',
+      updatedTrainingDuration,
+    );
+    return updatedTrainingDuration;
   }
 
   @Delete(':id')

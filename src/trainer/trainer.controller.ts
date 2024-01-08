@@ -11,15 +11,21 @@ import { TrainerService } from './trainer.service';
 import { CreateTrainerDto } from './dto/create-trainer.dto';
 import { UpdateTrainerDto } from './dto/update-trainer.dto';
 import { Public } from '@/security/resources/decorators/public.decorator';
+import { EventsGateWay } from '@/security/resources/events/event.gateway';
 
 @Controller('trainer')
 export class TrainerController {
-  constructor(private readonly trainerService: TrainerService) {}
+  constructor(
+    private readonly trainerService: TrainerService,
+    private readonly eventsGateWay: EventsGateWay,
+  ) {}
 
   @Public()
   @Post()
   async create(@Body() createTrainerDto: CreateTrainerDto) {
-    return await this.trainerService.create(createTrainerDto);
+    const createdTrainer = await this.trainerService.create(createTrainerDto);
+    this.eventsGateWay.server.emit('createdTrainer', createdTrainer);
+    return createdTrainer;
   }
 
   @Get()
@@ -37,7 +43,12 @@ export class TrainerController {
     @Param('id') id: string,
     @Body() updateTrainerDto: UpdateTrainerDto,
   ) {
-    return await this.trainerService.update(+id, updateTrainerDto);
+    const updatedTrainer = await this.trainerService.update(
+      +id,
+      updateTrainerDto,
+    );
+    this.eventsGateWay.server.emit('updatedTrainer', updatedTrainer);
+    return updatedTrainer;
   }
 
   @Delete(':id')

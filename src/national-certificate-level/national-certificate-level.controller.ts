@@ -10,11 +10,13 @@ import {
 import { NationalCertificateLevelService } from './national-certificate-level.service';
 import { CreateNationalCertificateLevelDto } from './dto/create-national-certificate-level.dto';
 import { UpdateNationalCertificateLevelDto } from './dto/update-national-certificate-level.dto';
+import { EventsGateWay } from '@/security/resources/events/event.gateway';
 
 @Controller('national-certificate-level')
 export class NationalCertificateLevelController {
   constructor(
     private readonly nationalCertificateLevelService: NationalCertificateLevelService,
+    private readonly eventsGateWay: EventsGateWay,
   ) {}
 
   @Post()
@@ -22,9 +24,15 @@ export class NationalCertificateLevelController {
     @Body()
     createNationalCertificateLevelDto: CreateNationalCertificateLevelDto,
   ) {
-    return await this.nationalCertificateLevelService.create(
-      createNationalCertificateLevelDto,
+    const createdNationalCertificateLevel =
+      await this.nationalCertificateLevelService.create(
+        createNationalCertificateLevelDto,
+      );
+    this.eventsGateWay.server.emit(
+      'createdNationalCertificateLevel',
+      createdNationalCertificateLevel,
     );
+    return createdNationalCertificateLevel;
   }
 
   @Get()
@@ -43,10 +51,16 @@ export class NationalCertificateLevelController {
     @Body()
     updateNationalCertificateLevelDto: UpdateNationalCertificateLevelDto,
   ) {
-    return await this.nationalCertificateLevelService.update(
-      +id,
-      updateNationalCertificateLevelDto,
+    const updatedNationalCertificateLevel =
+      await this.nationalCertificateLevelService.update(
+        +id,
+        updateNationalCertificateLevelDto,
+      );
+    this.eventsGateWay.server.emit(
+      'updatedNationalCertificateLevel',
+      updatedNationalCertificateLevel,
     );
+    return updatedNationalCertificateLevel;
   }
 
   @Delete(':id')

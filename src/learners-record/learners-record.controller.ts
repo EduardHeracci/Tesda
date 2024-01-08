@@ -10,14 +10,25 @@ import {
 import { LearnersRecordService } from './learners-record.service';
 import { CreateLearnersRecordDto } from './dto/create-learners-record.dto';
 import { UpdateLearnersRecordDto } from './dto/update-learners-record.dto';
+import { EventsGateWay } from '@/security/resources/events/event.gateway';
 
 @Controller('learners-record')
 export class LearnersRecordController {
-  constructor(private readonly learnersRecordService: LearnersRecordService) {}
+  constructor(
+    private readonly learnersRecordService: LearnersRecordService,
+    private readonly eventsGateWay: EventsGateWay,
+  ) {}
 
   @Post()
   async create(@Body() createLearnersRecordDto: CreateLearnersRecordDto) {
-    return await this.learnersRecordService.create(createLearnersRecordDto);
+    const createdLearnersRecord = await this.learnersRecordService.create(
+      createLearnersRecordDto,
+    );
+    this.eventsGateWay.server.emit(
+      'createdLearnersRecord',
+      createdLearnersRecord,
+    );
+    return createdLearnersRecord;
   }
 
   @Get()
@@ -35,10 +46,15 @@ export class LearnersRecordController {
     @Param('id') id: string,
     @Body() updateLearnersRecordDto: UpdateLearnersRecordDto,
   ) {
-    return await this.learnersRecordService.update(
+    const updatedLearnersRecord = await this.learnersRecordService.update(
       +id,
       updateLearnersRecordDto,
     );
+    this.eventsGateWay.server.emit(
+      'updatedLearnersRecord',
+      updatedLearnersRecord,
+    );
+    return updatedLearnersRecord;
   }
 
   @Delete(':id')

@@ -10,14 +10,22 @@ import {
 import { MunicipalityService } from './municipality.service';
 import { CreateMunicipalityDto } from './dto/create-municipality.dto';
 import { UpdateMunicipalityDto } from './dto/update-municipality.dto';
+import { EventsGateWay } from '@/security/resources/events/event.gateway';
 
 @Controller('municipality')
 export class MunicipalityController {
-  constructor(private readonly municipalityService: MunicipalityService) {}
+  constructor(
+    private readonly municipalityService: MunicipalityService,
+    private readonly eventsGateWay: EventsGateWay,
+  ) {}
 
   @Post()
   async create(@Body() createMunicipalityDto: CreateMunicipalityDto) {
-    return await this.municipalityService.create(createMunicipalityDto);
+    const createdMunicipality = await this.municipalityService.create(
+      createMunicipalityDto,
+    );
+    this.eventsGateWay.server.emit('createdMunicipality', createdMunicipality);
+    return createdMunicipality;
   }
 
   @Get()
@@ -35,7 +43,12 @@ export class MunicipalityController {
     @Param('id') id: string,
     @Body() updateMunicipalityDto: UpdateMunicipalityDto,
   ) {
-    return await this.municipalityService.update(+id, updateMunicipalityDto);
+    const updatedMunicipality = await this.municipalityService.update(
+      +id,
+      updateMunicipalityDto,
+    );
+    this.eventsGateWay.server.emit('updatedMunicipality', updatedMunicipality);
+    return updatedMunicipality;
   }
 
   @Delete(':id')

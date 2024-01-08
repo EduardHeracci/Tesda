@@ -10,14 +10,25 @@ import {
 import { UnitCompetencyService } from './unit-competency.service';
 import { CreateUnitCompetencyDto } from './dto/create-unit-competency.dto';
 import { UpdateUnitCompetencyDto } from './dto/update-unit-competency.dto';
+import { EventsGateWay } from '@/security/resources/events/event.gateway';
 
 @Controller('unit-competency')
 export class UnitCompetencyController {
-  constructor(private readonly unitCompetencyService: UnitCompetencyService) {}
+  constructor(
+    private readonly unitCompetencyService: UnitCompetencyService,
+    private readonly eventsGateWay: EventsGateWay,
+  ) {}
 
   @Post()
   async create(@Body() createUnitCompetencyDto: CreateUnitCompetencyDto) {
-    return await this.unitCompetencyService.create(createUnitCompetencyDto);
+    const createdUnitCompetency = await this.unitCompetencyService.create(
+      createUnitCompetencyDto,
+    );
+    this.eventsGateWay.server.emit(
+      'createdUnitCompetency',
+      createdUnitCompetency,
+    );
+    return createdUnitCompetency;
   }
 
   @Get()
@@ -35,10 +46,15 @@ export class UnitCompetencyController {
     @Param('id') id: string,
     @Body() updateUnitCompetencyDto: UpdateUnitCompetencyDto,
   ) {
-    return await this.unitCompetencyService.update(
+    const updatedUnitCompetency = await this.unitCompetencyService.update(
       +id,
       updateUnitCompetencyDto,
     );
+    this.eventsGateWay.server.emit(
+      'updatedUnitCompetency',
+      updatedUnitCompetency,
+    );
+    return updatedUnitCompetency;
   }
 
   @Delete(':id')

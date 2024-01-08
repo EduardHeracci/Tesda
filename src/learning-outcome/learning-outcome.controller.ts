@@ -10,16 +10,25 @@ import {
 import { LearningOutcomeService } from './learning-outcome.service';
 import { CreateLearningOutcomeDto } from './dto/create-learning-outcome.dto';
 import { UpdateLearningOutcomeDto } from './dto/update-learning-outcome.dto';
+import { EventsGateWay } from '@/security/resources/events/event.gateway';
 
 @Controller('learning-outcome')
 export class LearningOutcomeController {
   constructor(
     private readonly learningOutcomeService: LearningOutcomeService,
+    private readonly eventsGateWay: EventsGateWay,
   ) {}
 
   @Post()
   async create(@Body() createLearningOutcomeDto: CreateLearningOutcomeDto) {
-    return await this.learningOutcomeService.create(createLearningOutcomeDto);
+    const createdLearningOutcome = await this.learningOutcomeService.create(
+      createLearningOutcomeDto,
+    );
+    this.eventsGateWay.server.emit(
+      'createdLearningOutcome',
+      createdLearningOutcome,
+    );
+    return createdLearningOutcome;
   }
 
   @Get()
@@ -37,10 +46,15 @@ export class LearningOutcomeController {
     @Param('id') id: string,
     @Body() updateLearningOutcomeDto: UpdateLearningOutcomeDto,
   ) {
-    return await this.learningOutcomeService.update(
+    const updatedLearningOutcome = await this.learningOutcomeService.update(
       +id,
       updateLearningOutcomeDto,
     );
+    this.eventsGateWay.server.emit(
+      'updatedLearningOutcome',
+      updatedLearningOutcome,
+    );
+    return updatedLearningOutcome;
   }
 
   @Delete(':id')

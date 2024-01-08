@@ -5,9 +5,10 @@ import { Trainer } from './entities/trainer.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HashingService } from '@/security/resources/hashing.service';
 import { BcryptService } from '@/security/resources/bcrypt.service';
+import { EventsModule } from '@/security/resources/events/event.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Trainer])],
+  imports: [EventsModule, TypeOrmModule.forFeature([Trainer])],
   controllers: [TrainerController],
   providers: [
     {

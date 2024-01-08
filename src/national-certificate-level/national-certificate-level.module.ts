@@ -3,9 +3,10 @@ import { NationalCertificateLevelService } from './national-certificate-level.se
 import { NationalCertificateLevelController } from './national-certificate-level.controller';
 import { NationalCertificateLevel } from './entities/national-certificate-level.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { EventsModule } from '@/security/resources/events/event.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([NationalCertificateLevel])],
+  imports: [EventsModule, TypeOrmModule.forFeature([NationalCertificateLevel])],
   controllers: [NationalCertificateLevelController],
   providers: [NationalCertificateLevelService],
 })

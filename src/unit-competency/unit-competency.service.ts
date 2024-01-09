@@ -32,7 +32,7 @@ export class UnitCompetencyService {
     }
   }
 
-  async findOne(id: string): Promise<UnitCompetency> {
+  async findOne(id: number): Promise<UnitCompetency> {
     try {
       return await this.unitCompetencyRepository.findOneOrFail({
         where: { id },

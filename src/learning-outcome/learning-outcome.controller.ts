@@ -38,7 +38,7 @@ export class LearningOutcomeController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return await this.learningOutcomeService.findOne(id);
+    return await this.learningOutcomeService.findOne(+id);
   }
 
   @Patch(':id')

@@ -34,7 +34,7 @@ export class LearningOutcomeService {
     }
   }
 
-  async findOne(id: string): Promise<LearningOutcome> {
+  async findOne(id: number): Promise<LearningOutcome> {
     try {
       return await this.learningOutcomeRepository.findOneOrFail({
         where: { id },

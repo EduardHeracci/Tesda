@@ -38,7 +38,7 @@ export class UnitCompetencyController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return await this.unitCompetencyService.findOne(id);
+    return await this.unitCompetencyService.findOne(+id);
   }
 
   @Patch(':id')

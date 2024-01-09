@@ -1,11 +1,17 @@
 import { LearningOutcome } from '@/learning-outcome/entities/learning-outcome.entity';
 import { LevelCompetency } from '@/level-competency/entities/level-competency.entity';
-import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class UnitCompetency {
-  @PrimaryColumn()
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   unitCompetencyCode: string;

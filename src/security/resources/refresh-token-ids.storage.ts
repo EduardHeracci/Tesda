@@ -19,8 +19,8 @@ export class RefreshTokenIdsStorage
       port: +process.env.REDIS_PORT,
     });
   }
-  onApplicationShutdown(signal?: string) {
-    return this.redisClient.quit();
+  onApplicationShutdown(signal: any) {
+    return this.redisClient.quit(signal);
   }
   async insert(userId: number, tokenId: string): Promise<void> {
     await this.redisClient.set(this.getKey(userId), tokenId);

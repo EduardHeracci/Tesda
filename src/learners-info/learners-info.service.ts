@@ -40,9 +40,6 @@ export class LearnersInfoService {
           municipality: row[8],
         }
       });
-
-      console.log("hi", data)
-      console.log("hello", learnersInfoArray)
       return await this.learnersInfoRepository.save(learnersInfoArray);
     } catch (error) {
       throw new BadRequestException();

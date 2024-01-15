@@ -14,11 +14,11 @@ export class NationalCertificateLevelService {
   constructor(
     @InjectRepository(NationalCertificateLevel)
     private readonly nationalCertificateLevelRepository: Repository<NationalCertificateLevel>,
-  ) {}
+  ) { }
 
   async create(
     createNationalCertificateLevelDto: CreateNationalCertificateLevelDto,
-  ) {
+  ): Promise<NationalCertificateLevel> {
     try {
       return await this.nationalCertificateLevelRepository.save(
         createNationalCertificateLevelDto,
@@ -28,9 +28,16 @@ export class NationalCertificateLevelService {
     }
   }
 
-  async findAll(): Promise<NationalCertificateLevel[]> {
+  async findAll(): Promise<{
+    results: NationalCertificateLevel[];
+    total: number;
+  }> {
+    const [results, total] = await Promise.all([
+      await this.nationalCertificateLevelRepository.find(),
+      await this.nationalCertificateLevelRepository.count(),
+    ]);
     try {
-      return await this.nationalCertificateLevelRepository.find();
+      return { results, total };
     } catch (error) {
       throw new NotFoundException();
     }
@@ -49,9 +56,9 @@ export class NationalCertificateLevelService {
   async update(
     id: number,
     updateNationalCertificateLevelDto: UpdateNationalCertificateLevelDto,
-  ) {
+  ): Promise<void> {
     try {
-      return await this.nationalCertificateLevelRepository.update(
+      await this.nationalCertificateLevelRepository.update(
         id,
         updateNationalCertificateLevelDto,
       );
@@ -60,9 +67,9 @@ export class NationalCertificateLevelService {
     }
   }
 
-  async delete(id: number) {
+  async delete(id: number): Promise<void> {
     try {
-      return await this.nationalCertificateLevelRepository.delete(id);
+      await this.nationalCertificateLevelRepository.delete(id);
     } catch (error) {
       throw new BadRequestException();
     }

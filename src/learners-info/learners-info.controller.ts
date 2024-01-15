@@ -16,16 +16,18 @@ import { UpdateLearnersInfoDto } from './dto/update-learners-info.dto';
 import { EventsGateWay } from '@/security/resources/events/event.gateway';
 import { FileInterceptor } from '@nestjs/platform-express';
 import xlsx from 'xlsx';
+import { LearnerDataRow } from '@/security/resources/interface/learners-data-row';
+import { LearnersInfo } from './entities/learners-info.entity';
 
 @Controller('learners-info')
 export class LearnersInfoController {
   constructor(
     private readonly learnersInfoService: LearnersInfoService,
     private readonly eventsGateWay: EventsGateWay,
-  ) {}
+  ) { }
 
   @Post()
-  async create(@Body() createLearnersInfoDto: CreateLearnersInfoDto) {
+  async create(@Body() createLearnersInfoDto: CreateLearnersInfoDto): Promise<LearnersInfo> {
     const createdLearnersInfo = await this.learnersInfoService.create(
       createLearnersInfoDto,
     );
@@ -47,13 +49,12 @@ export class LearnersInfoController {
 
   @Post('/upload')
   @UseInterceptors(FileInterceptor('file'))
-  async createUsingExcel(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
+  async createUsingExcel(@UploadedFile() file: Express.Multer.File): Promise<LearnersInfo[]> {
     const workbook = xlsx.read(file.buffer, { type: 'buffer' });
 
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
-    const data = xlsx.utils.sheet_to_json(worksheet, { header: 1, range: 1 });
+    const data: LearnerDataRow[] = xlsx.utils.sheet_to_json(worksheet, { header: 1, range: 1 });
     const createdLearnersInfo =
       await this.learnersInfoService.createUsingExcel(data);
     this.eventsGateWay.server.emit('createdLearnersInfo', createdLearnersInfo);
@@ -70,17 +71,12 @@ export class LearnersInfoController {
   // }
 
   @Get()
-  async findAll(@Query('isActive') isActive?: string) {
+  async findAll(@Query('isActive') isActive?: string): Promise<{ results: LearnersInfo[]; total: number }> {
     return await this.learnersInfoService.findAll(isActive);
   }
 
-  @Get('/count')
-  async countAll() {
-    return await this.learnersInfoService.countAll();
-  }
-
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<LearnersInfo> {
     return await this.learnersInfoService.findOne(+id);
   }
 
@@ -88,7 +84,7 @@ export class LearnersInfoController {
   async update(
     @Param('id') id: string,
     @Body() updateLearnersInfoDto: UpdateLearnersInfoDto,
-  ) {
+  ): Promise<void> {
     const updatedLearnersInfo = await this.learnersInfoService.update(
       +id,
       updateLearnersInfoDto,
@@ -98,7 +94,7 @@ export class LearnersInfoController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
+  async delete(@Param('id') id: string): Promise<void> {
     return await this.learnersInfoService.delete(+id);
   }
 }

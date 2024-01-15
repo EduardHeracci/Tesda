@@ -14,9 +14,9 @@ export class MunicipalityService {
   constructor(
     @InjectRepository(Municipality)
     private readonly municipalityRepository: Repository<Municipality>,
-  ) {}
+  ) { }
 
-  async create(createMunicipalityDto: CreateMunicipalityDto) {
+  async create(createMunicipalityDto: CreateMunicipalityDto): Promise<Municipality> {
     try {
       return await this.municipalityRepository.save(createMunicipalityDto);
     } catch (error) {
@@ -24,9 +24,13 @@ export class MunicipalityService {
     }
   }
 
-  async findAll(): Promise<Municipality[]> {
+  async findAll(): Promise<{ results: Municipality[]; total: number }> {
+    const [results, total] = await Promise.all([
+      await this.municipalityRepository.find(),
+      await this.municipalityRepository.count(),
+    ]);
     try {
-      return await this.municipalityRepository.find();
+      return { results, total };
     } catch (error) {
       throw new NotFoundException();
     }
@@ -42,9 +46,9 @@ export class MunicipalityService {
     }
   }
 
-  async update(id: number, updateMunicipalityDto: UpdateMunicipalityDto) {
+  async update(id: number, updateMunicipalityDto: UpdateMunicipalityDto): Promise<void> {
     try {
-      return await this.municipalityRepository.update(
+      await this.municipalityRepository.update(
         id,
         updateMunicipalityDto,
       );
@@ -53,9 +57,9 @@ export class MunicipalityService {
     }
   }
 
-  async delete(id: number) {
+  async delete(id: number): Promise<void> {
     try {
-      return await this.municipalityRepository.delete(id);
+      await this.municipalityRepository.delete(id);
     } catch (error) {
       throw new BadRequestException();
     }

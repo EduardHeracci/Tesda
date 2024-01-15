@@ -14,9 +14,9 @@ export class UnitCompetencyService {
   constructor(
     @InjectRepository(UnitCompetency)
     private readonly unitCompetencyRepository: Repository<UnitCompetency>,
-  ) {}
+  ) { }
 
-  async create(createUnitCompetencyDto: CreateUnitCompetencyDto) {
+  async create(createUnitCompetencyDto: CreateUnitCompetencyDto): Promise<UnitCompetency> {
     try {
       return await this.unitCompetencyRepository.save(createUnitCompetencyDto);
     } catch (error) {
@@ -42,9 +42,9 @@ export class UnitCompetencyService {
     }
   }
 
-  async update(id: number, updateUnitCompetencyDto: UpdateUnitCompetencyDto) {
+  async update(id: number, updateUnitCompetencyDto: UpdateUnitCompetencyDto): Promise<void> {
     try {
-      return await this.unitCompetencyRepository.update(
+      await this.unitCompetencyRepository.update(
         id,
         updateUnitCompetencyDto,
       );
@@ -53,9 +53,9 @@ export class UnitCompetencyService {
     }
   }
 
-  async delete(id: number) {
+  async delete(id: number): Promise<void> {
     try {
-      return await this.unitCompetencyRepository.delete(id);
+      await this.unitCompetencyRepository.delete(id);
     } catch (error) {
       throw new BadRequestException();
     }

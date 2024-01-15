@@ -2,7 +2,6 @@ import { LearnersRecord } from '@/learners-record/entities/learners-record.entit
 import { Municipality } from '@/municipality/entities/municipality.entity';
 import {
   Column,
-  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,

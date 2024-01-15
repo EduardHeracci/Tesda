@@ -34,7 +34,7 @@ import { AuthenticationGuard } from './authentication.guard';
     TrainerSerializer,
   ],
 })
-export class AuthenticationModule {}
+export class AuthenticationModule { }
 // export class AuthenticationModule implements NestModule {
 //   configure(consumer: MiddlewareConsumer) {
 //     consumer

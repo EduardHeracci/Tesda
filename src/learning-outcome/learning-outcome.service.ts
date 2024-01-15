@@ -14,9 +14,9 @@ export class LearningOutcomeService {
   constructor(
     @InjectRepository(LearningOutcome)
     private readonly learningOutcomeRepository: Repository<LearningOutcome>,
-  ) {}
+  ) { }
 
-  async create(createLearningOutcomeDto: CreateLearningOutcomeDto) {
+  async create(createLearningOutcomeDto: CreateLearningOutcomeDto): Promise<LearningOutcome> {
     try {
       return await this.learningOutcomeRepository.save(
         createLearningOutcomeDto,
@@ -26,9 +26,13 @@ export class LearningOutcomeService {
     }
   }
 
-  async findAll(): Promise<LearningOutcome[]> {
+  async findAll(): Promise<{ results: LearningOutcome[]; total: number }> {
     try {
-      return await this.learningOutcomeRepository.find();
+      const [results, total] = await Promise.all([
+        await this.learningOutcomeRepository.find(),
+        await this.learningOutcomeRepository.count(),
+      ]);
+      return { results, total };
     } catch (error) {
       throw new NotFoundException();
     }
@@ -44,9 +48,9 @@ export class LearningOutcomeService {
     }
   }
 
-  async update(id: number, updateLearningOutcomeDto: UpdateLearningOutcomeDto) {
+  async update(id: number, updateLearningOutcomeDto: UpdateLearningOutcomeDto): Promise<void> {
     try {
-      return await this.learningOutcomeRepository.update(
+      await this.learningOutcomeRepository.update(
         id,
         updateLearningOutcomeDto,
       );
@@ -55,9 +59,9 @@ export class LearningOutcomeService {
     }
   }
 
-  async delete(id: number) {
+  async delete(id: number): Promise<void> {
     try {
-      return await this.learningOutcomeRepository.delete(id);
+      await this.learningOutcomeRepository.delete(id);
     } catch (error) {
       throw new BadRequestException();
     }

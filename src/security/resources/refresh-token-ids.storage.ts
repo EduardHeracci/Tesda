@@ -5,22 +5,21 @@ import {
 } from '@nestjs/common';
 import Redis from 'ioredis';
 
-export class InvalidatedRefreshTokenError extends Error {}
+export class InvalidatedRefreshTokenError extends Error { }
 
 @Injectable()
 export class RefreshTokenIdsStorage
-  implements OnApplicationBootstrap, OnApplicationShutdown
-{
+  implements OnApplicationBootstrap, OnApplicationShutdown {
   private redisClient: Redis;
 
-  onApplicationBootstrap() {
+  onApplicationBootstrap(): void {
     this.redisClient = new Redis({
       host: process.env.REDIS_HOST,
       port: +process.env.REDIS_PORT,
     });
   }
-  onApplicationShutdown(signal: any) {
-    return this.redisClient.quit(signal);
+  onApplicationShutdown(): Promise<"OK"> {
+    return this.redisClient.quit();
   }
   async insert(userId: number, tokenId: string): Promise<void> {
     await this.redisClient.set(this.getKey(userId), tokenId);

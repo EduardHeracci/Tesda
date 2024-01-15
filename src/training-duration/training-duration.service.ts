@@ -14,9 +14,9 @@ export class TrainingDurationService {
   constructor(
     @InjectRepository(TrainingDuration)
     private readonly trainingDurationRepository: Repository<TrainingDuration>,
-  ) {}
+  ) { }
 
-  async create(createTrainingDurationDto: CreateTrainingDurationDto) {
+  async create(createTrainingDurationDto: CreateTrainingDurationDto): Promise<TrainingDuration> {
     try {
       return await this.trainingDurationRepository.save(
         createTrainingDurationDto,
@@ -26,9 +26,18 @@ export class TrainingDurationService {
     }
   }
 
-  async findAll(): Promise<TrainingDuration[]> {
+  async findAll(): Promise<{ results: TrainingDuration[]; total: number }> {
+    const query = await this.trainingDurationRepository
+      .createQueryBuilder('trainingDuration')
+      .leftJoinAndSelect('trainingDuration.trainer', 'trainer')
+      .leftJoinAndSelect('trainingDuration.scholarship', 'scholarship')
+      .leftJoinAndSelect('trainingDuration.qualification', 'qualification');
     try {
-      return await this.trainingDurationRepository.find();
+      const [results, total] = await Promise.all([
+        await query.getMany(),
+        await query.getCount(),
+      ]);
+      return { results, total };
     } catch (error) {
       throw new NotFoundException();
     }
@@ -47,9 +56,9 @@ export class TrainingDurationService {
   async update(
     id: number,
     updateTrainingDurationDto: UpdateTrainingDurationDto,
-  ) {
+  ): Promise<void> {
     try {
-      return await this.trainingDurationRepository.update(
+      await this.trainingDurationRepository.update(
         id,
         updateTrainingDurationDto,
       );
@@ -58,9 +67,9 @@ export class TrainingDurationService {
     }
   }
 
-  async delete(id: number) {
+  async delete(id: number): Promise<void> {
     try {
-      return await this.trainingDurationRepository.delete(id);
+      await this.trainingDurationRepository.delete(id);
     } catch (error) {
       throw new BadRequestException();
     }

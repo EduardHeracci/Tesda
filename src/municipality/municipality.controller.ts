@@ -11,16 +11,17 @@ import { MunicipalityService } from './municipality.service';
 import { CreateMunicipalityDto } from './dto/create-municipality.dto';
 import { UpdateMunicipalityDto } from './dto/update-municipality.dto';
 import { EventsGateWay } from '@/security/resources/events/event.gateway';
+import { Municipality } from './entities/municipality.entity';
 
 @Controller('municipality')
 export class MunicipalityController {
   constructor(
     private readonly municipalityService: MunicipalityService,
     private readonly eventsGateWay: EventsGateWay,
-  ) {}
+  ) { }
 
   @Post()
-  async create(@Body() createMunicipalityDto: CreateMunicipalityDto) {
+  async create(@Body() createMunicipalityDto: CreateMunicipalityDto): Promise<Municipality> {
     const createdMunicipality = await this.municipalityService.create(
       createMunicipalityDto,
     );
@@ -29,12 +30,15 @@ export class MunicipalityController {
   }
 
   @Get()
-  async findAll() {
+  async findAll(): Promise<{
+    results: Municipality[];
+    total: number;
+  }> {
     return await this.municipalityService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<Municipality> {
     return await this.municipalityService.findOne(+id);
   }
 
@@ -42,7 +46,7 @@ export class MunicipalityController {
   async update(
     @Param('id') id: string,
     @Body() updateMunicipalityDto: UpdateMunicipalityDto,
-  ) {
+  ): Promise<void> {
     const updatedMunicipality = await this.municipalityService.update(
       +id,
       updateMunicipalityDto,
@@ -52,7 +56,7 @@ export class MunicipalityController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
+  async delete(@Param('id') id: string): Promise<void> {
     return await this.municipalityService.delete(+id);
   }
 }

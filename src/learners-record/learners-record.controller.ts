@@ -11,16 +11,17 @@ import { LearnersRecordService } from './learners-record.service';
 import { CreateLearnersRecordDto } from './dto/create-learners-record.dto';
 import { UpdateLearnersRecordDto } from './dto/update-learners-record.dto';
 import { EventsGateWay } from '@/security/resources/events/event.gateway';
+import { LearnersRecord } from './entities/learners-record.entity';
 
 @Controller('learners-record')
 export class LearnersRecordController {
   constructor(
     private readonly learnersRecordService: LearnersRecordService,
     private readonly eventsGateWay: EventsGateWay,
-  ) {}
+  ) { }
 
   @Post()
-  async create(@Body() createLearnersRecordDto: CreateLearnersRecordDto) {
+  async create(@Body() createLearnersRecordDto: CreateLearnersRecordDto): Promise<LearnersRecord> {
     const createdLearnersRecord = await this.learnersRecordService.create(
       createLearnersRecordDto,
     );
@@ -32,12 +33,15 @@ export class LearnersRecordController {
   }
 
   @Get()
-  async findAll() {
+  async findAll(): Promise<{
+    results: LearnersRecord[];
+    total: number;
+  }> {
     return await this.learnersRecordService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<LearnersRecord> {
     return await this.learnersRecordService.findOne(+id);
   }
 
@@ -45,7 +49,7 @@ export class LearnersRecordController {
   async update(
     @Param('id') id: string,
     @Body() updateLearnersRecordDto: UpdateLearnersRecordDto,
-  ) {
+  ): Promise<void> {
     const updatedLearnersRecord = await this.learnersRecordService.update(
       +id,
       updateLearnersRecordDto,
@@ -58,7 +62,7 @@ export class LearnersRecordController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
+  async delete(@Param('id') id: string): Promise<void> {
     return await this.learnersRecordService.delete(+id);
   }
 }

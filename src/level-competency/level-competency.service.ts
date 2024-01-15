@@ -14,9 +14,9 @@ export class LevelCompetencyService {
   constructor(
     @InjectRepository(LevelCompetency)
     private readonly levelCompetencyRepository: Repository<LevelCompetency>,
-  ) {}
+  ) { }
 
-  async create(createLevelCompetencyDto: CreateLevelCompetencyDto) {
+  async create(createLevelCompetencyDto: CreateLevelCompetencyDto): Promise<LevelCompetency> {
     try {
       return await this.levelCompetencyRepository.save(
         createLevelCompetencyDto,
@@ -26,9 +26,16 @@ export class LevelCompetencyService {
     }
   }
 
-  async findAll(): Promise<LevelCompetency[]> {
+  async findAll(): Promise<{ results: LevelCompetency[]; total: number }> {
+    const query = this.levelCompetencyRepository
+      .createQueryBuilder('levelCompetency')
+      .leftJoinAndSelect('levelCompetency.unitCompetency', 'unitCompetency');
     try {
-      return await this.levelCompetencyRepository.find();
+      const [results, total] = await Promise.all([
+        await query.getMany(),
+        await query.getCount(),
+      ]);
+      return { results, total };
     } catch (error) {
       throw new NotFoundException();
     }
@@ -44,9 +51,9 @@ export class LevelCompetencyService {
     }
   }
 
-  async update(id: number, updateLevelCompetencyDto: UpdateLevelCompetencyDto) {
+  async update(id: number, updateLevelCompetencyDto: UpdateLevelCompetencyDto): Promise<void> {
     try {
-      return await this.levelCompetencyRepository.update(
+      await this.levelCompetencyRepository.update(
         id,
         updateLevelCompetencyDto,
       );
@@ -55,9 +62,9 @@ export class LevelCompetencyService {
     }
   }
 
-  async delete(id: number) {
+  async delete(id: number): Promise<void> {
     try {
-      return await this.levelCompetencyRepository.delete(id);
+      await this.levelCompetencyRepository.delete(id);
     } catch (error) {
       throw new BadRequestException();
     }

@@ -24,9 +24,13 @@ export class AuthenticationService {
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
     private readonly refreshTokenIdsStorage: RefreshTokenIdsStorage,
-  ) {}
+  ) { }
 
-  async signIn(signInDto: CreateTrainerDto) {
+  async signIn(signInDto: CreateTrainerDto): Promise<{
+    accessToken: string;
+    refreshToken: string;
+    user: Trainer;
+  }> {
     const user = await this.trainerRepository.findOneBy({
       username: signInDto.username,
     });
@@ -43,7 +47,11 @@ export class AuthenticationService {
     return await this.generateTokens(user);
   }
 
-  async generateTokens(user: Trainer) {
+  async generateTokens(user: Trainer): Promise<{
+    accessToken: string;
+    refreshToken: string;
+    user: Trainer;
+  }> {
     const refreshTokenId = randomUUID();
     const [accessToken, refreshToken] = await Promise.all([
       this.signToken(user.id, this.jwtConfiguration.accessTokenTtl, {
@@ -62,7 +70,11 @@ export class AuthenticationService {
     };
   }
 
-  async refreshTokens(refreshTokenDto: RefreshTokenDto) {
+  async refreshTokens(refreshTokenDto: RefreshTokenDto): Promise<{
+    accessToken: string;
+    refreshToken: string;
+    user: Trainer;
+  }> {
     try {
       const { sub, refreshTokenId } = await this.jwtService.verifyAsync<
         { sub: number } & { refreshTokenId: string }
@@ -88,7 +100,7 @@ export class AuthenticationService {
     }
   }
 
-  private async signToken<T>(userId: number, expiresIn: number, payload?: T) {
+  private async signToken<T>(userId: number, expiresIn: number, payload?: T): Promise<string> {
     return await this.jwtService.signAsync(
       {
         sub: userId,

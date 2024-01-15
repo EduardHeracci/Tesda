@@ -11,16 +11,17 @@ import { QualificationService } from './qualification.service';
 import { CreateQualificationDto } from './dto/create-qualification.dto';
 import { UpdateQualificationDto } from './dto/update-qualification.dto';
 import { EventsGateWay } from '@/security/resources/events/event.gateway';
+import { Qualification } from './entities/qualification.entity';
 
 @Controller('qualification')
 export class QualificationController {
   constructor(
     private readonly qualificationService: QualificationService,
     private readonly eventsGateWay: EventsGateWay,
-  ) {}
+  ) { }
 
   @Post()
-  async create(@Body() createQualificationDto: CreateQualificationDto) {
+  async create(@Body() createQualificationDto: CreateQualificationDto): Promise<Qualification> {
     const createdQualification = await this.qualificationService.create(
       createQualificationDto,
     );
@@ -32,12 +33,12 @@ export class QualificationController {
   }
 
   @Get()
-  async findAll() {
+  async findAll(): Promise<{ results: Qualification[]; total: number }> {
     return await this.qualificationService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<Qualification> {
     return await this.qualificationService.findOne(+id);
   }
 
@@ -45,7 +46,7 @@ export class QualificationController {
   async update(
     @Param('id') id: string,
     @Body() updateQualificationDto: UpdateQualificationDto,
-  ) {
+  ): Promise<void> {
     const updatedQualification = await this.qualificationService.update(
       +id,
       updateQualificationDto,
@@ -58,7 +59,7 @@ export class QualificationController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
+  async delete(@Param('id') id: string): Promise<void> {
     return await this.qualificationService.delete(+id);
   }
 }

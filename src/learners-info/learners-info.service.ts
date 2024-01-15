@@ -8,15 +8,16 @@ import { UpdateLearnersInfoDto } from './dto/update-learners-info.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LearnersInfo } from './entities/learners-info.entity';
 import { Repository } from 'typeorm';
+import { LearnerDataRow } from '@/security/resources/interface/learners-data-row';
 
 @Injectable()
 export class LearnersInfoService {
   constructor(
     @InjectRepository(LearnersInfo)
     private readonly learnersInfoRepository: Repository<LearnersInfo>,
-  ) {}
+  ) { }
 
-  async create(createLearnersInfoDto: CreateLearnersInfoDto) {
+  async create(createLearnersInfoDto: CreateLearnersInfoDto): Promise<LearnersInfo> {
     try {
       return await this.learnersInfoRepository.save(createLearnersInfoDto);
     } catch (error) {
@@ -24,35 +25,24 @@ export class LearnersInfoService {
     }
   }
 
-  async createUsingExcel(data: any[]) {
+  async createUsingExcel(data: LearnerDataRow[]): Promise<LearnersInfo[]> {
     try {
       const learnersInfoArray = data.map((row) => {
-        const [
-          firstName,
-          middleName,
-          lastName,
-          suffix,
-          birthDate,
-          gender,
-          phoneNumber,
-          address,
-          municipality,
-        ] = row;
-
-        const entity = new LearnersInfo();
-        entity.firstName = firstName;
-        entity.middleName = middleName;
-        entity.lastName = lastName;
-        entity.suffix = suffix;
-        entity.birthDate = new Date(birthDate);
-        entity.gender = gender;
-        entity.phoneNumber = phoneNumber;
-        entity.address = address;
-        entity.municipality = municipality;
-
-        return entity;
+        return {
+          firstName: row[0],
+          middleName: row[1],
+          lastName: row[2],
+          suffix: row[3],
+          birthDate: row[4],
+          gender: row[5],
+          phoneNumber: row[6],
+          address: row[7],
+          municipality: row[8],
+        }
       });
 
+      console.log("hi", data)
+      console.log("hello", learnersInfoArray)
       return await this.learnersInfoRepository.save(learnersInfoArray);
     } catch (error) {
       throw new BadRequestException();
@@ -108,7 +98,7 @@ export class LearnersInfoService {
 
   async findAll(
     isActive?: string,
-  ): Promise<{ data: LearnersInfo[]; total: number }> {
+  ): Promise<{ results: LearnersInfo[]; total: number }> {
     const query = this.learnersInfoRepository
       .createQueryBuilder('learnersInfo')
       .leftJoin('learnersInfo.municipality', 'municipality')
@@ -121,7 +111,7 @@ export class LearnersInfoService {
         'learnersInfo.gender AS gender',
         'learnersInfo.phoneNumber AS phone_number',
         'learnersInfo.address AS address',
-        'learnersInfo.isActive AS isActive',
+        'learnersInfo.isActive AS is_active',
         'municipality',
         `DATE_PART('year', AGE(NOW(), learnersInfo.birthDate)) AS age`,
         `TO_CHAR(learnersInfo.birthDate, 'YYYY-MM-DD') AS birth_date`,
@@ -132,24 +122,12 @@ export class LearnersInfoService {
     }
 
     try {
-      const [data, total] = await Promise.all([
-        query.getRawMany(),
-        this.learnersInfoRepository.count(),
+      const [results, total] = await Promise.all([
+        await query.getRawMany(),
+        await query.clone().getCount(),
       ]);
 
-      return { data, total };
-    } catch (error) {
-      throw new NotFoundException();
-    }
-  }
-
-  async countAll(): Promise<LearnersInfo[]> {
-    const query = this.learnersInfoRepository
-      .createQueryBuilder('learnersInfo')
-      .select('COUNT(learnersInfo.id) AS total_learners');
-
-    try {
-      return await query.getRawMany();
+      return { results, total };
     } catch (error) {
       throw new NotFoundException();
     }
@@ -163,9 +141,9 @@ export class LearnersInfoService {
     }
   }
 
-  async update(id: number, updateLearnersInfoDto: UpdateLearnersInfoDto) {
+  async update(id: number, updateLearnersInfoDto: UpdateLearnersInfoDto): Promise<void> {
     try {
-      return await this.learnersInfoRepository.update(
+      await this.learnersInfoRepository.update(
         id,
         updateLearnersInfoDto,
       );
@@ -174,9 +152,9 @@ export class LearnersInfoService {
     }
   }
 
-  async delete(id: number) {
+  async delete(id: number): Promise<void> {
     try {
-      return await this.learnersInfoRepository.delete(id);
+      await this.learnersInfoRepository.delete(id);
     } catch (error) {
       throw new BadRequestException();
     }

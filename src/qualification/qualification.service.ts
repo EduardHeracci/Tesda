@@ -14,9 +14,9 @@ export class QualificationService {
   constructor(
     @InjectRepository(Qualification)
     private readonly qualificationRepository: Repository<Qualification>,
-  ) {}
+  ) { }
 
-  async create(createQualificationDto: CreateQualificationDto) {
+  async create(createQualificationDto: CreateQualificationDto): Promise<Qualification> {
     try {
       return await this.qualificationRepository.save(createQualificationDto);
     } catch (error) {
@@ -24,9 +24,20 @@ export class QualificationService {
     }
   }
 
-  async findAll(): Promise<Qualification[]> {
+  async findAll(): Promise<{ results: Qualification[]; total: number }> {
+    const query = this.qualificationRepository
+      .createQueryBuilder('qualification')
+      .leftJoinAndSelect(
+        'qualification.nationalCertificateLevel',
+        'nationalCertificateLevel',
+      )
+      .leftJoinAndSelect('qualification.levelCompetency', 'levelCompetency');
+    const [results, total] = await Promise.all([
+      await query.getMany(),
+      await query.getCount(),
+    ]);
     try {
-      return await this.qualificationRepository.find();
+      return { results, total };
     } catch (error) {
       throw new NotFoundException();
     }
@@ -42,9 +53,9 @@ export class QualificationService {
     }
   }
 
-  async update(id: number, updateQualificationDto: UpdateQualificationDto) {
+  async update(id: number, updateQualificationDto: UpdateQualificationDto): Promise<void> {
     try {
-      return await this.qualificationRepository.update(
+      await this.qualificationRepository.update(
         id,
         updateQualificationDto,
       );
@@ -53,9 +64,9 @@ export class QualificationService {
     }
   }
 
-  async delete(id: number) {
+  async delete(id: number): Promise<void> {
     try {
-      return await this.qualificationRepository.delete(id);
+      await this.qualificationRepository.delete(id);
     } catch (error) {
       throw new BadRequestException();
     }

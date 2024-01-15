@@ -11,16 +11,17 @@ import { TrainingDurationService } from './training-duration.service';
 import { CreateTrainingDurationDto } from './dto/create-training-duration.dto';
 import { UpdateTrainingDurationDto } from './dto/update-training-duration.dto';
 import { EventsGateWay } from '@/security/resources/events/event.gateway';
+import { TrainingDuration } from './entities/training-duration.entity';
 
 @Controller('training-duration')
 export class TrainingDurationController {
   constructor(
     private readonly trainingDurationService: TrainingDurationService,
     private readonly eventsGateWay: EventsGateWay,
-  ) {}
+  ) { }
 
   @Post()
-  async create(@Body() createTrainingDurationDto: CreateTrainingDurationDto) {
+  async create(@Body() createTrainingDurationDto: CreateTrainingDurationDto): Promise<TrainingDuration> {
     const createdTrainingDuration = await this.trainingDurationService.create(
       createTrainingDurationDto,
     );
@@ -32,12 +33,12 @@ export class TrainingDurationController {
   }
 
   @Get()
-  async findAll() {
+  async findAll(): Promise<{ results: TrainingDuration[]; total: number }> {
     return await this.trainingDurationService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<TrainingDuration> {
     return await this.trainingDurationService.findOne(+id);
   }
 
@@ -45,7 +46,7 @@ export class TrainingDurationController {
   async update(
     @Param('id') id: string,
     @Body() updateTrainingDurationDto: UpdateTrainingDurationDto,
-  ) {
+  ): Promise<void> {
     const updatedTrainingDuration = await this.trainingDurationService.update(
       +id,
       updateTrainingDurationDto,
@@ -58,7 +59,7 @@ export class TrainingDurationController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
+  async delete(@Param('id') id: string): Promise<void> {
     return await this.trainingDurationService.delete(+id);
   }
 }

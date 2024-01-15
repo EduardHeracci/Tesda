@@ -10,4 +10,4 @@ import { EventsModule } from '@/security/resources/events/event.module';
   controllers: [LevelCompetencyController],
   providers: [LevelCompetencyService],
 })
-export class LevelCompetencyModule {}
+export class LevelCompetencyModule { }

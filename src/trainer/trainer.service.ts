@@ -16,9 +16,9 @@ export class TrainerService {
     @InjectRepository(Trainer)
     private readonly trainerRepository: Repository<Trainer>,
     private readonly hashingService: HashingService,
-  ) {}
+  ) { }
 
-  async create(createTrainerDto: CreateTrainerDto) {
+  async create(createTrainerDto: CreateTrainerDto): Promise<Trainer> {
     const hashedPassword = await this.hashingService.hash(
       createTrainerDto.password,
     );
@@ -33,9 +33,13 @@ export class TrainerService {
     }
   }
 
-  async findAll(): Promise<Trainer[]> {
+  async findAll(): Promise<{ results: Trainer[]; total: number }> {
+    const [results, total] = await Promise.all([
+      await this.trainerRepository.find(),
+      await this.trainerRepository.count(),
+    ]);
     try {
-      return await this.trainerRepository.find();
+      return { results, total };
     } catch (error) {
       throw new NotFoundException();
     }
@@ -61,17 +65,17 @@ export class TrainerService {
   //   }
   // }
 
-  async update(id: number, updateTrainerDto: UpdateTrainerDto) {
+  async update(id: number, updateTrainerDto: UpdateTrainerDto): Promise<void> {
     try {
-      return await this.trainerRepository.update(id, updateTrainerDto);
+      await this.trainerRepository.update(id, updateTrainerDto);
     } catch (error) {
       throw new BadRequestException();
     }
   }
 
-  async delete(id: number) {
+  async delete(id: number): Promise<void> {
     try {
-      return await this.trainerRepository.delete(id);
+      await this.trainerRepository.delete(id);
     } catch (error) {
       throw new BadRequestException();
     }

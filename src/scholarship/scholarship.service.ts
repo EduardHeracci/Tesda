@@ -14,9 +14,9 @@ export class ScholarshipService {
   constructor(
     @InjectRepository(Scholarship)
     private readonly scholarshipRepository: Repository<Scholarship>,
-  ) {}
+  ) { }
 
-  async create(createScholarshipDto: CreateScholarshipDto) {
+  async create(createScholarshipDto: CreateScholarshipDto): Promise<Scholarship> {
     try {
       return await this.scholarshipRepository.save(createScholarshipDto);
     } catch (error) {
@@ -24,9 +24,13 @@ export class ScholarshipService {
     }
   }
 
-  async findAll(): Promise<Scholarship[]> {
+  async findAll(): Promise<{ results: Scholarship[]; total: number }> {
+    const [results, total] = await Promise.all([
+      await this.scholarshipRepository.find(),
+      await this.scholarshipRepository.count(),
+    ]);
     try {
-      return await this.scholarshipRepository.find();
+      return { results, total };
     } catch (error) {
       throw new NotFoundException();
     }
@@ -42,17 +46,17 @@ export class ScholarshipService {
     }
   }
 
-  async update(id: number, updateScholarshipDto: UpdateScholarshipDto) {
+  async update(id: number, updateScholarshipDto: UpdateScholarshipDto): Promise<void> {
     try {
-      return await this.scholarshipRepository.update(id, updateScholarshipDto);
+      await this.scholarshipRepository.update(id, updateScholarshipDto);
     } catch (error) {
       throw new BadRequestException();
     }
   }
 
-  async delete(id: number) {
+  async delete(id: number): Promise<void> {
     try {
-      return await this.scholarshipRepository.delete(id);
+      await this.scholarshipRepository.delete(id);
     } catch (error) {
       throw new BadRequestException();
     }

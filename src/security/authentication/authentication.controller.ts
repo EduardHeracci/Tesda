@@ -14,7 +14,7 @@ import { Public } from '../resources/decorators/public.decorator';
 
 @Controller('authentication')
 export class AuthenticationController {
-  constructor(private readonly authenticationService: AuthenticationService) {}
+  constructor(private readonly authenticationService: AuthenticationService) { }
 
   @Public()
   @HttpCode(HttpStatus.OK)
@@ -23,8 +23,8 @@ export class AuthenticationController {
     @Res({ passthrough: true }) response: Response,
     // @Req() request: Request,
     @Body() signInDto: CreateTrainerDto, // @Res ({ passthrough: true }) response: Response,
-  ) {
-    const { accessToken, refreshToken, user } =
+  ): Promise<void> {
+    const { accessToken, refreshToken } =
       await this.authenticationService.signIn(signInDto);
     // await promisify(request.login).call(request, user);
     response.cookie('accessToken', accessToken, {
@@ -46,7 +46,7 @@ export class AuthenticationController {
   async refreshTokens(
     @Res({ passthrough: true }) response: Response,
     @Body() refreshTokenDto: RefreshTokenDto,
-  ) {
+  ): Promise<void> {
     const { accessToken, refreshToken } =
       await this.authenticationService.refreshTokens(refreshTokenDto);
     response.cookie('accessToken', accessToken, {

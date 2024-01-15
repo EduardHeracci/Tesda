@@ -14,9 +14,9 @@ export class LearnersRecordService {
   constructor(
     @InjectRepository(LearnersRecord)
     private readonly learnersRecordRepository: Repository<LearnersRecord>,
-  ) {}
+  ) { }
 
-  async create(createLearnersRecordDto: CreateLearnersRecordDto) {
+  async create(createLearnersRecordDto: CreateLearnersRecordDto): Promise<LearnersRecord> {
     try {
       return await this.learnersRecordRepository.save(createLearnersRecordDto);
     } catch (error) {
@@ -24,9 +24,18 @@ export class LearnersRecordService {
     }
   }
 
-  async findAll(): Promise<LearnersRecord[]> {
+  async findAll(): Promise<{ results: LearnersRecord[]; total: number }> {
+    const query = this.learnersRecordRepository
+      .createQueryBuilder('learnersRecord')
+      .leftJoinAndSelect('learnersRecord.learnersInfo', 'learnersInfo')
+      .leftJoinAndSelect('learnersRecord.trainingDuration', 'trainingDuration');
     try {
-      return await this.learnersRecordRepository.find();
+      const [results, total] = await Promise.all([
+        await query.getMany(),
+        await query.getCount(),
+      ]);
+
+      return { results, total };
     } catch (error) {
       throw new NotFoundException();
     }
@@ -42,9 +51,9 @@ export class LearnersRecordService {
     }
   }
 
-  async update(id: number, updateLearnersRecordDto: UpdateLearnersRecordDto) {
+  async update(id: number, updateLearnersRecordDto: UpdateLearnersRecordDto): Promise<void> {
     try {
-      return await this.learnersRecordRepository.update(
+      await this.learnersRecordRepository.update(
         id,
         updateLearnersRecordDto,
       );
@@ -53,9 +62,9 @@ export class LearnersRecordService {
     }
   }
 
-  async delete(id: number) {
+  async delete(id: number): Promise<void> {
     try {
-      return await this.learnersRecordRepository.delete(id);
+      await this.learnersRecordRepository.delete(id);
     } catch (error) {
       throw new BadRequestException();
     }

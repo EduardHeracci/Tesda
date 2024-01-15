@@ -22,7 +22,7 @@ export class Trainer {
   gender: string;
 
   @Column()
-  birthDate: string;
+  birthDate: Date;
 
   @Column()
   qualification: string;

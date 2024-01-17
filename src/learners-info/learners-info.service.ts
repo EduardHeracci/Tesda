@@ -8,7 +8,7 @@ import { UpdateLearnersInfoDto } from './dto/update-learners-info.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LearnersInfo } from './entities/learners-info.entity';
 import { Repository } from 'typeorm';
-import { LearnerDataRow } from '@/security/resources/interface/learners-data-row';
+import { LearnerInfoDataRow } from '@/security/resources/interface';
 
 @Injectable()
 export class LearnersInfoService {
@@ -25,7 +25,7 @@ export class LearnersInfoService {
     }
   }
 
-  async createUsingExcel(data: LearnerDataRow[]): Promise<LearnersInfo[]> {
+  async createUsingExcel(data: LearnerInfoDataRow[]): Promise<LearnersInfo[]> {
     try {
       const learnersInfoArray = data.map((row) => {
         return {

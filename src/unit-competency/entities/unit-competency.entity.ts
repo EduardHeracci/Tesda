@@ -19,6 +19,9 @@ export class UnitCompetency {
   @Column()
   name: string;
 
+  @Column({ default: true })
+  isActive: boolean;
+
   @ManyToOne(
     () => LearningOutcome,
     (learningOutcome) => learningOutcome.unitCompetency,

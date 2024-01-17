@@ -12,6 +12,9 @@ export class LearningOutcome {
   @Column()
   taskRequired: string;
 
+  @Column({ default: true })
+  isActive: boolean;
+
   @OneToMany(
     () => UnitCompetency,
     (unitCompetency) => unitCompetency.learningOutcome,

@@ -16,7 +16,7 @@ import { UpdateLearnersInfoDto } from './dto/update-learners-info.dto';
 import { EventsGateWay } from '@/security/resources/events/event.gateway';
 import { FileInterceptor } from '@nestjs/platform-express';
 import xlsx from 'xlsx';
-import { LearnerDataRow } from '@/security/resources/interface/learners-data-row';
+import { LearnerInfoDataRow } from '@/security/resources/interface';
 import { LearnersInfo } from './entities/learners-info.entity';
 
 @Controller('learners-info')
@@ -54,10 +54,10 @@ export class LearnersInfoController {
 
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
-    const data: LearnerDataRow[] = xlsx.utils.sheet_to_json(worksheet, { header: 1, range: 1 });
+    const data: LearnerInfoDataRow[] = xlsx.utils.sheet_to_json(worksheet, { header: 1, range: 1 });
     const createdLearnersInfo =
       await this.learnersInfoService.createUsingExcel(data);
-    this.eventsGateWay.server.emit('createdLearnersInfo', createdLearnersInfo);
+    this.eventsGateWay.server.emit('createdExcelLearnersInfo', createdLearnersInfo);
     return createdLearnersInfo;
   }
 

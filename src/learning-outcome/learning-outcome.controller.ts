@@ -6,12 +6,18 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { LearningOutcomeService } from './learning-outcome.service';
 import { CreateLearningOutcomeDto } from './dto/create-learning-outcome.dto';
 import { UpdateLearningOutcomeDto } from './dto/update-learning-outcome.dto';
 import { EventsGateWay } from '@/security/resources/events/event.gateway';
 import { LearningOutcome } from './entities/learning-outcome.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { LearningOutcomeDataRow } from '@/security/resources/interface';
+import xlsx from 'xlsx';
 
 @Controller('learning-outcome')
 export class LearningOutcomeController {
@@ -32,12 +38,26 @@ export class LearningOutcomeController {
     return createdLearningOutcome;
   }
 
+  @Post('/upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async createUsingExcel(@UploadedFile() file: Express.Multer.File): Promise<LearningOutcome[]> {
+    const workbook = xlsx.read(file.buffer, { type: 'buffer' });
+
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+    const data: LearningOutcomeDataRow[] = xlsx.utils.sheet_to_json(worksheet, { header: 1, range: 1 });
+    const createdLearnersInfo =
+      await this.learningOutcomeService.createUsingExcel(data);
+    this.eventsGateWay.server.emit('createdExcelLearningOutcome', createdLearnersInfo);
+    return createdLearnersInfo;
+  }
+
   @Get()
-  async findAll(): Promise<{
+  async findAll(@Query('isActive') isActive?: string): Promise<{
     results: LearningOutcome[];
     total: number;
   }> {
-    return await this.learningOutcomeService.findAll();
+    return await this.learningOutcomeService.findAll(isActive);
   }
 
   @Get(':id')

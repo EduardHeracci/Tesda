@@ -57,10 +57,15 @@ export class TrainingDurationService {
     id: number,
     updateTrainingDurationDto: UpdateTrainingDurationDto,
   ): Promise<void> {
+    const learnersInfo = updateTrainingDurationDto.learnersInfo && (await Promise.all(updateTrainingDurationDto.learnersInfo))
+    const trainingDuration = await this.trainingDurationRepository.preload({
+      id: +id,
+      ...updateTrainingDurationDto,
+      learnersInfo
+    })
     try {
-      await this.trainingDurationRepository.update(
-        id,
-        updateTrainingDurationDto,
+      await this.trainingDurationRepository.save(
+        trainingDuration
       );
     } catch (error) {
       throw new BadRequestException();

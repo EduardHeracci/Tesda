@@ -1,12 +1,13 @@
-import { LearnersRecord } from '@/learners-record/entities/learners-record.entity';
+import { LearnersInfo } from '@/learners-info/entities/learners-info.entity';
 import { Qualification } from '@/qualification/entities/qualification.entity';
 import { Scholarship } from '@/scholarship/entities/scholarship.entity';
 import { Trainer } from '@/trainer/entities/trainer.entity';
 import {
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   Relation,
 } from 'typeorm';
@@ -34,9 +35,10 @@ export class TrainingDuration {
   )
   qualification: Qualification;
 
-  @OneToMany(
-    () => LearnersRecord,
-    (learnersRecord) => learnersRecord.trainingDuration,
+  @JoinTable()
+  @ManyToMany(
+    () => LearnersInfo,
+    (learnersInfo) => learnersInfo.trainingDuration,
   )
-  learnersRecord: LearnersRecord[];
+  learnersInfo: LearnersInfo[];
 }

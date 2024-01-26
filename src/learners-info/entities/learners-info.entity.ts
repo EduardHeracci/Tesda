@@ -1,10 +1,10 @@
-import { LearnersRecord } from '@/learners-record/entities/learners-record.entity';
 import { Municipality } from '@/municipality/entities/municipality.entity';
+import { TrainingDuration } from '@/training-duration/entities/training-duration.entity';
 import {
   Column,
   Entity,
+  ManyToMany,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -43,9 +43,9 @@ export class LearnersInfo {
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToMany(
-    () => LearnersRecord,
-    (learnersRecord) => learnersRecord.learnersInfo,
+  @ManyToMany(
+    () => TrainingDuration,
+    (trainingDuration) => trainingDuration.learnersInfo,
   )
-  learnersRecord: LearnersRecord[];
+  trainingDuration: TrainingDuration[];
 }

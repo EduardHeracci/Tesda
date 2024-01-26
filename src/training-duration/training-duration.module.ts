@@ -10,4 +10,4 @@ import { EventsModule } from '@/security/resources/events/event.module';
   controllers: [TrainingDurationController],
   providers: [TrainingDurationService],
 })
-export class TrainingDurationModule {}
+export class TrainingDurationModule { }

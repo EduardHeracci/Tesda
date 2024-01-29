@@ -27,13 +27,16 @@ export class QualificationService {
   async findAll(): Promise<{ results: Qualification[]; total: number }> {
     const query = this.qualificationRepository
       .createQueryBuilder('qualification')
-      .leftJoinAndSelect(
+      .leftJoin(
         'qualification.nationalCertificateLevel',
         'nationalCertificateLevel',
       )
-      .leftJoinAndSelect('qualification.levelCompetency', 'levelCompetency');
+      .leftJoin('qualification.levelCompetency', 'levelCompetency')
+      .leftJoin('levelCompetency.unitCompetency', 'unitCompetency')
+      .leftJoin('unitCompetency.learningOutcome', 'learningOutcome')
+      .select(['qualification.id AS id', 'qualification.name AS name', 'qualification.abbreviation AS abbreviation', 'nationalCertificateLevel', 'levelCompetency', 'unitCompetency', 'learningOutcome']);
     const [results, total] = await Promise.all([
-      await query.getMany(),
+      await query.getRawMany(),
       await query.getCount(),
     ]);
     try {

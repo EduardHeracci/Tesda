@@ -29,10 +29,11 @@ export class LevelCompetencyService {
   async findAll(): Promise<{ results: LevelCompetency[]; total: number }> {
     const query = this.levelCompetencyRepository
       .createQueryBuilder('levelCompetency')
-      .leftJoinAndSelect('levelCompetency.unitCompetency', 'unitCompetency');
+      .leftJoin('levelCompetency.unitCompetency', 'unitCompetency')
+      .select(['levelCompetency.id AS id', 'levelCompetency.name AS name', 'unitCompetency']);
     try {
       const [results, total] = await Promise.all([
-        await query.getMany(),
+        await query.getRawMany(),
         await query.getCount(),
       ]);
       return { results, total };

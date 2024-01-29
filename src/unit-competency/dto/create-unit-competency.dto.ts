@@ -1,5 +1,5 @@
+import { LevelCompetency } from '@/level-competency/entities/level-competency.entity';
 import { IsOptional } from 'class-validator';
-import { LearningOutcome } from '@/learning-outcome/entities/learning-outcome.entity';
 export class CreateUnitCompetencyDto {
   @IsOptional()
   unitCompetencyCode: string;
@@ -8,5 +8,5 @@ export class CreateUnitCompetencyDto {
   name: string;
 
   @IsOptional()
-  learningOutcome: LearningOutcome;
+  levelCompetency: LevelCompetency;
 }

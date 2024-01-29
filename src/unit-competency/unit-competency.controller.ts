@@ -66,10 +66,11 @@ export class UnitCompetencyController {
   async update(
     @Param('id') id: string,
     @Body() updateUnitCompetencyDto: UpdateUnitCompetencyDto,
-  ): Promise<void> {
-    const updatedUnitCompetency = await this.unitCompetencyService.update(
-      +id,
-      updateUnitCompetencyDto,
+  ): Promise<void[]> {
+
+    const idArray = id.split(',').map(id => id);
+    const updatedUnitCompetency = await Promise.all(
+      idArray.map(id => this.unitCompetencyService.update(+id, updateUnitCompetencyDto))
     );
     this.eventsGateWay.server.emit(
       'updatedUnitCompetency',

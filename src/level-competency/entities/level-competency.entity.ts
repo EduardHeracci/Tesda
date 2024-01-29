@@ -1,9 +1,8 @@
-import { Qualification } from '@/qualification/entities/qualification.entity';
+//import { Qualification } from '@/qualification/entities/qualification.entity';
 import { UnitCompetency } from '@/unit-competency/entities/unit-competency.entity';
 import {
   Column,
   Entity,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -16,15 +15,16 @@ export class LevelCompetency {
   @Column()
   name: string;
 
-  @ManyToOne(
+  @OneToMany(
     () => UnitCompetency,
     (unitCompetency) => unitCompetency.levelCompetency,
   )
-  unitCompetency: UnitCompetency;
+  unitCompetency: UnitCompetency[];
 
-  @OneToMany(
-    () => Qualification,
-    (qualification) => qualification.levelCompetency,
-  )
-  qualification: Qualification[];
+  //   @OneToMany(
+  //     () => Qualification,
+  //     (qualification) => qualification.levelCompetency,
+  //   )
+  //   qualification: Qualification[];
+  // }
 }

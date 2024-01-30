@@ -49,11 +49,12 @@ export class LevelCompetencyController {
   async update(
     @Param('id') id: string,
     @Body() updateLevelCompetencyDto: UpdateLevelCompetencyDto,
-  ): Promise<void> {
-    const updatedLevelCompetency = await this.levelCompetencyService.update(
+  ): Promise<void[]> {
+    const idArray = id.split(',').map(id => id);
+    const updatedLevelCompetency = await Promise.all(idArray.map(id => this.levelCompetencyService.update(
       +id,
       updateLevelCompetencyDto,
-    );
+    )));
     this.eventsGateWay.server.emit(
       'updatedLevelCompetency',
       updatedLevelCompetency,

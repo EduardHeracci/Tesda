@@ -54,12 +54,13 @@ export class NationalCertificateLevelController {
     @Param('id') id: string,
     @Body()
     updateNationalCertificateLevelDto: UpdateNationalCertificateLevelDto,
-  ): Promise<void> {
+  ): Promise<void[]> {
+    const idArray = id.split(',').map(id => id);
     const updatedNationalCertificateLevel =
-      await this.nationalCertificateLevelService.update(
+      await Promise.all(idArray.map(id => this.nationalCertificateLevelService.update(
         +id,
         updateNationalCertificateLevelDto,
-      );
+      )));
     this.eventsGateWay.server.emit(
       'updatedNationalCertificateLevel',
       updatedNationalCertificateLevel,

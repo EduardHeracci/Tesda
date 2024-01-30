@@ -6,7 +6,6 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  Relation,
 } from 'typeorm';
 
 @Entity()
@@ -23,15 +22,15 @@ export class UnitCompetency {
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToMany(
+  @ManyToOne(
     () => LearningOutcome,
     (learningOutcome) => learningOutcome.unitCompetency,
   )
-  learningOutcome: LearningOutcome[];
+  learningOutcome: LearningOutcome;
 
-  @ManyToOne(
+  @OneToMany(
     () => LevelCompetency,
     (levelCompetency) => levelCompetency.unitCompetency,
   )
-  levelCompetency: Relation<LevelCompetency>;
+  levelCompetency: LevelCompetency[];
 }

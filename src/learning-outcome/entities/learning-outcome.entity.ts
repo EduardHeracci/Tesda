@@ -1,5 +1,5 @@
 import { UnitCompetency } from '@/unit-competency/entities/unit-competency.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class LearningOutcome {
@@ -15,9 +15,9 @@ export class LearningOutcome {
   @Column({ default: true })
   isActive: boolean;
 
-  @ManyToOne(
+  @OneToMany(
     () => UnitCompetency,
     (unitCompetency) => unitCompetency.learningOutcome,
   )
-  unitCompetency: Relation<UnitCompetency>;
+  unitCompetency: UnitCompetency[];
 }

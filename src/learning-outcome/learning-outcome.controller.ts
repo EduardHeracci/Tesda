@@ -69,11 +69,12 @@ export class LearningOutcomeController {
   async update(
     @Param('id') id: string,
     @Body() updateLearningOutcomeDto: UpdateLearningOutcomeDto,
-  ): Promise<void> {
-    const updatedLearningOutcome = await this.learningOutcomeService.update(
+  ): Promise<void[]> {
+    const idArray = id.split(',').map(id => id);
+    const updatedLearningOutcome = await Promise.all(idArray.map(id => this.learningOutcomeService.update(
       +id,
       updateLearningOutcomeDto,
-    );
+    )));
     this.eventsGateWay.server.emit(
       'updatedLearningOutcome',
       updatedLearningOutcome,

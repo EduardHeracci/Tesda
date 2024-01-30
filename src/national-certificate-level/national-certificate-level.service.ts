@@ -32,9 +32,12 @@ export class NationalCertificateLevelService {
     results: NationalCertificateLevel[];
     total: number;
   }> {
+    const query = this.nationalCertificateLevelRepository
+      .createQueryBuilder('nationalCertificateLevel')
+      .select(['nationalCertificateLevel']);
     const [results, total] = await Promise.all([
-      await this.nationalCertificateLevelRepository.find(),
-      await this.nationalCertificateLevelRepository.count(),
+      await query.getRawMany(),
+      await query.clone().getCount(),
     ]);
     try {
       return { results, total };

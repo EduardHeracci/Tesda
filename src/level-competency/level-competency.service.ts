@@ -30,7 +30,7 @@ export class LevelCompetencyService {
     const query = this.levelCompetencyRepository
       .createQueryBuilder('levelCompetency')
       .leftJoin('levelCompetency.unitCompetency', 'unitCompetency')
-      .select(['levelCompetency.id AS id', 'levelCompetency.name AS name', 'unitCompetency']);
+      .select(['levelCompetency', 'unitCompetency']);
     try {
       const [results, total] = await Promise.all([
         await query.getRawMany(),

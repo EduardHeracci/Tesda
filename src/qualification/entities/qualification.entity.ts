@@ -1,4 +1,4 @@
-//import { LevelCompetency } from '@/level-competency/entities/level-competency.entity';
+import { LevelCompetency } from '@/level-competency/entities/level-competency.entity';
 import { NationalCertificateLevel } from '@/national-certificate-level/entities/national-certificate-level.entity';
 import { TrainingDuration } from '@/training-duration/entities/training-duration.entity';
 import {
@@ -26,11 +26,11 @@ export class Qualification {
   )
   nationalCertificateLevel: NationalCertificateLevel;
 
-  // @ManyToOne(
-  //   () => LevelCompetency,
-  //   (levelCompetency) => levelCompetency.qualification,
-  // )
-  // levelCompetency: LevelCompetency;
+  @ManyToOne(
+    () => LevelCompetency,
+    (levelCompetency) => levelCompetency.qualification,
+  )
+  levelCompetency: LevelCompetency;
 
   @OneToMany(
     () => TrainingDuration,

@@ -46,11 +46,12 @@ export class QualificationController {
   async update(
     @Param('id') id: string,
     @Body() updateQualificationDto: UpdateQualificationDto,
-  ): Promise<void> {
-    const updatedQualification = await this.qualificationService.update(
+  ): Promise<void[]> {
+    const idArray = id.split(',').map(id => id);
+    const updatedQualification = await Promise.all(idArray.map(id => this.qualificationService.update(
       +id,
       updateQualificationDto,
-    );
+    )));
     this.eventsGateWay.server.emit(
       'updatedQualification',
       updatedQualification,

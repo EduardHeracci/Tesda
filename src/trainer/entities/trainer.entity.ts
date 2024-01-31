@@ -21,16 +21,16 @@ export class Trainer {
   @Column()
   gender: string;
 
-  @Column()
+  @Column({ nullable: true, type: 'date' })
   birthDate: Date;
 
-  @Column()
-  qualification: string;
+  @Column({ nullable: true, type: 'json' })
+  qualification: string[];
 
-  @Column({ nullable: true })
+  @Column()
   username: string;
 
-  @Column({ nullable: true })
+  @Column()
   password: string;
 
   @Column()

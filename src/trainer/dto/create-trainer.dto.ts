@@ -20,7 +20,7 @@ export class CreateTrainerDto {
   birthDate: string;
 
   @IsOptional()
-  qualification: string;
+  qualification: string[];
 
   @IsOptional()
   username: string;

@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { LevelCompetencyService } from './level-competency.service';
 import { CreateLevelCompetencyDto } from './dto/create-level-competency.dto';
@@ -33,11 +34,11 @@ export class LevelCompetencyController {
   }
 
   @Get()
-  async findAll(): Promise<{
+  async findAll(@Query('isActive') isActive?: string): Promise<{
     results: LevelCompetency[];
     total: number;
   }> {
-    return await this.levelCompetencyService.findAll();
+    return await this.levelCompetencyService.findAll(isActive);
   }
 
   @Get(':id')

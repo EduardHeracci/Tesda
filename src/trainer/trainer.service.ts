@@ -33,10 +33,14 @@ export class TrainerService {
     }
   }
 
-  async findAll(): Promise<{ results: Trainer[]; total: number }> {
+  async findAll(isActive: string): Promise<{ results: Trainer[]; total: number }> {
+    const query = this.trainerRepository.createQueryBuilder('trainer');
+    if (isActive !== undefined) {
+      query.andWhere('trainer.isActive = :isActive', { isActive })
+    }
     const [results, total] = await Promise.all([
-      await this.trainerRepository.find(),
-      await this.trainerRepository.count(),
+      await query.getMany(),
+      await query.clone().getCount(),
     ]);
     try {
       return { results, total };

@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { TrainerService } from './trainer.service';
 import { CreateTrainerDto } from './dto/create-trainer.dto';
@@ -30,8 +31,8 @@ export class TrainerController {
   }
 
   @Get()
-  async findAll(): Promise<{ results: Trainer[]; total: number }> {
-    return await this.trainerService.findAll();
+  async findAll(@Query('isActive') isActive?: string): Promise<{ results: Trainer[]; total: number }> {
+    return await this.trainerService.findAll(isActive);
   }
 
   @Get(':id')

@@ -26,15 +26,20 @@ export class LevelCompetencyService {
     }
   }
 
-  async findAll(): Promise<{ results: LevelCompetency[]; total: number }> {
+  async findAll(isActive: string): Promise<{ results: LevelCompetency[]; total: number }> {
     const query = this.levelCompetencyRepository
       .createQueryBuilder('levelCompetency')
       .leftJoin('levelCompetency.unitCompetency', 'unitCompetency')
       .select(['levelCompetency', 'unitCompetency']);
+
+    if (isActive !== undefined) {
+      query.andWhere('levelCompetency.isActive = :isActive', { isActive });
+
+    }
     try {
       const [results, total] = await Promise.all([
         await query.getRawMany(),
-        await query.getCount(),
+        await query.clone().getCount(),
       ]);
       return { results, total };
     } catch (error) {

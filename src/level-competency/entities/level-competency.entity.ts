@@ -16,6 +16,9 @@ export class LevelCompetency {
   @Column()
   name: string;
 
+  @Column({ nullable: true })
+  isActive: boolean;
+
   @ManyToOne(
     () => UnitCompetency,
     (unitCompetency) => unitCompetency.levelCompetency,
